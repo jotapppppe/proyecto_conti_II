@@ -16,3 +16,9 @@ output:
   extra_dependencies: ['amsmath', 'someotherpackage']
 ---
 
+```{r}
+source("code/setup.R")
+```
+
+
+
