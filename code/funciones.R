@@ -1,0 +1,1 @@
+descuento <- function(i, j, n) 1/((1-i)*(1-j))^n
