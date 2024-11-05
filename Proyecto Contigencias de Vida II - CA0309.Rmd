@@ -1,0 +1,18 @@
+---
+title: "Proyecto Contigencias de Vida II - CA0309"
+oauthor: 
+- Ashley Arrieta Padilla | C
+- Henri Gerard Gabert Hidalgo | B93096
+- Juan Pablo Morgan Sandí | C15319
+- Erick Venegas Espinoza | C09319
+
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: flatly
+    toc: yes
+    toc_float:
+      collapsed: true
+  extra_dependencies: ['amsmath', 'someotherpackage']
+---
+
