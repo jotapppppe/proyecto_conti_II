@@ -52,7 +52,13 @@ tabla_4 <- tablas_probabilidad_transiciones[22:28,2:6] %>%
 
 tablas_estados <- list(tabla_1, tabla_2, tabla_3, tabla_4)
 
+
 rm(tabla_1)
 rm(tabla_2)
 rm(tabla_3)
 rm(tabla_4)
+
+
+lista_tablas <- split(tablas_probabilidad_transiciones[,3:6], 
+                      rep(1:4, each = 7))
+
