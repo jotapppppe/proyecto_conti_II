@@ -31,3 +31,87 @@ tpx <- function(x, t, m, n) {
   
   return(probabilidad_total)
 }
+
+###########################################################
+
+# tpx con matrices
+tpxM <- function(x, t, i, j){
+  prob <- 0
+  if(x<30){
+    if(t<=9){
+      prob <- (lista_tablas[[i + 1]][1, j + 1])^(t)
+    }
+    else if(t<=19){
+      prob <- (lista_tablas[[i + 1]][1, j + 1])^(9) * (lista_tablas[[i + 1]][2, j + 1])^(t-10)
+    }
+    else if (t<=29){
+      prob <- (lista_tablas[[i + 1]][1, j + 1])^(9) * (lista_tablas[[i + 1]][2, j + 1])^(9) *(lista_tablas[[i + 1]][3, j + 1])^(t-20)
+    }
+    else if (t<=39){
+      prob <- (lista_tablas[[i + 1]][1, j + 1])^(9) * (lista_tablas[[i + 1]][2, j + 1])^(9) *(lista_tablas[[i + 1]][3, j + 1])^(9) *(lista_tablas[[i + 1]][4, j + 1])^(t-30)
+    }
+    else if (t<=49){
+      prob <- (lista_tablas[[i + 1]][1, j + 1])^(9) * (lista_tablas[[i + 1]][2, j + 1])^(9) *(lista_tablas[[i + 1]][3, j + 1])^(9) *(lista_tablas[[i + 1]][4, j + 1])^(9) *(lista_tablas[[i + 1]][5, j + 1])^(t-40)
+    }
+    else if (t<=59){
+      prob <- (lista_tablas[[i + 1]][1, j + 1])^(9) * (lista_tablas[[i + 1]][2, j + 1])^(9) *(lista_tablas[[i + 1]][3, j + 1])^(9) *(lista_tablas[[i + 1]][4, j + 1])^(9) *(lista_tablas[[i + 1]][5, j + 1])^(9) *(lista_tablas[[i + 1]][6, j + 1])^(t-50)
+    }
+  }
+  else if(x<40){
+    if(t<=9){
+      prob <- (lista_tablas[[i + 1]][2, j + 1])^(t)
+    }
+    else if(t<=19){
+      prob <- (lista_tablas[[i + 1]][2, j + 1])^(9) * (lista_tablas[[i + 1]][3, j + 1])^(t-10)
+    }
+    else if (t<=29){
+      prob <- (lista_tablas[[i + 1]][2, j + 1])^(9) * (lista_tablas[[i + 1]][3, j + 1])^(9) *(lista_tablas[[i + 1]][4, j + 1])^(t-20)
+    }
+    else if (t<=39){
+      prob <- (lista_tablas[[i + 1]][2, j + 1])^(9) * (lista_tablas[[i + 1]][3, j + 1])^(9) *(lista_tablas[[i + 1]][4, j + 1])^(9) *(lista_tablas[[i + 1]][5, j + 1])^(t-30)
+    }
+    else if (t<=49){
+      prob <- (lista_tablas[[i + 1]][2, j + 1])^(9) * (lista_tablas[[i + 1]][3, j + 1])^(9) *(lista_tablas[[i + 1]][4, j + 1])^(9) *(lista_tablas[[i + 1]][5, j + 1])^(9) *(lista_tablas[[i + 1]][6, j + 1])^(t-40)
+    }
+  }
+  else if(x<50){
+    if(t<=9){
+      prob <- (lista_tablas[[i + 1]][3, j + 1])^(t)
+    }
+    else if(t<=19){
+      prob <- (lista_tablas[[i + 1]][3, j + 1])^(9) * (lista_tablas[[i + 1]][4, j + 1])^(t-10)
+    }
+    else if (t<=29){
+      prob <- (lista_tablas[[i + 1]][3, j + 1])^(9) * (lista_tablas[[i + 1]][4, j + 1])^(9) *(lista_tablas[[i + 1]][5, j + 1])^(t-20)
+    }
+    else if (t<=39){
+      prob <- (lista_tablas[[i + 1]][3, j + 1])^(9) * (lista_tablas[[i + 1]][4, j + 1])^(9) *(lista_tablas[[i + 1]][5, j + 1])^(9) *(lista_tablas[[i + 1]][6, j + 1])^(t-30)
+    }
+  }
+  else if(x<60){
+    if(t<=9){
+      prob <- (lista_tablas[[i + 1]][4, j + 1])^(t)
+    }
+    else if(t<=19){
+      prob <- (lista_tablas[[i + 1]][4, j + 1])^(9) * (lista_tablas[[i + 1]][5, j + 1])^(t-10)
+    }
+    else if (t<=29){
+      prob <- (lista_tablas[[i + 1]][4, j + 1])^(9) * (lista_tablas[[i + 1]][5, j + 1])^(9) *(lista_tablas[[i + 1]][6, j + 1])^(t-20)
+    }
+  }
+  else if(x<70){
+    if(t<=9){
+      prob <- (lista_tablas[[i + 1]][5, j + 1])^(t)
+    }
+    else if(t<=19){
+      prob <- (lista_tablas[[i + 1]][5, j + 1])^(9) * (lista_tablas[[i + 1]][6, j + 1])^(t-10)
+    }
+  }
+  else if(x<80){
+    if(t<=9){
+      prob <- (lista_tablas[[i + 1]][6, j + 1])^(t)
+    }
+ 
+  }
+  return (prob)
+}
