@@ -8,7 +8,8 @@ pacman::p_load(
   ggplot2,
   plotly,
   lubridate,
-  xtable
+  xtable,
+  expm
 )
 
 # Valores iniciales
