@@ -1,8 +1,6 @@
-anualidad_discreta <- function(x, n, i, j, inflacion){
-  suma <- 0
-  for (k in 1:(n-1)){
-    suma <- suma + (descuento(interes, inflacion, k) * tpxM(x, k, i, j))
-  }
+anualidad_discreta <- function(x, n, i, j, inflacion, s){
+  ifelse(s == "M", s <- lista_tablas_masc, s <- lista_tablas_fem)
+  suma <- sum(unlist(sapply(1:(n-1), function(k) descuento(interes, inflacion, k) * tpxM(x, k, i, j, s))))
   return (suma)
 }
 
