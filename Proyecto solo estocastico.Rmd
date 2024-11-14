@@ -13,9 +13,9 @@ library(readxl)
 
 
 ```{r}
-Tabla_hombres <- read_excel("F:/Contingencias_2/Proyecto Final/tablas_probabilidad_transiciones.xlsx", sheet = "Table1_male") %>%
+Tabla_hombres <- read_excel("data/tablas_probabilidad_transiciones.xlsx", sheet = "Table1_male") %>%
   select(-c(7, 8, 9))
-Tabla_mujeres <- read_excel("F:/Contingencias_2/Proyecto Final/tablas_probabilidad_transiciones.xlsx", sheet = "Table2_female")
+Tabla_mujeres <- read_excel("data/tablas_probabilidad_transiciones.xlsx", sheet = "Table2_female")
 
 
 Tabla_hombres$State <- ifelse(Tabla_hombres$State == "Able", 0,
@@ -253,7 +253,7 @@ for (sim in 1:n_simulaciones) {
 return(list(resultados = resultados, resultados_finan = resultados_finan))
 }
 
-n_simulaciones <- 5 # Número de simulaciones
+n_simulaciones <- 1000 # Número de simulaciones
 n_annos <- 62  # Horizonte de proyección
 
 inicio <- Sys.time()
