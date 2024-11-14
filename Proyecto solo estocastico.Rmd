@@ -1,0 +1,324 @@
+---
+title: "Proyecto, solo estocastico"
+author: "Henri Gerard Gabert Hidalgo"
+date: "2024-10-31"
+output: html_document
+---
+
+Paquetes
+```{r}
+library(dplyr)
+library(readxl)
+```
+
+
+```{r}
+Tabla_hombres <- read_excel("F:/Contingencias_2/Proyecto Final/tablas_probabilidad_transiciones.xlsx", sheet = "Table1_male") %>%
+  select(-c(7, 8, 9))
+Tabla_mujeres <- read_excel("F:/Contingencias_2/Proyecto Final/tablas_probabilidad_transiciones.xlsx", sheet = "Table2_female")
+
+
+Tabla_hombres$State <- ifelse(Tabla_hombres$State == "Able", 0,
+                         ifelse(Tabla_hombres$State == "Mild_Moderate", 1,
+                                ifelse(Tabla_hombres$State == "Severe_Profound", 2,
+                                       ifelse(Tabla_hombres$State == "Dead", 3, NA))))
+
+Tabla_mujeres$State <- ifelse(Tabla_mujeres$State == "Able", 0,
+                         ifelse(Tabla_mujeres$State == "Mild_Moderate", 1,
+                                ifelse(Tabla_mujeres$State == "Severe_Profound", 2,
+                                       ifelse(Tabla_mujeres$State == "Dead", 3, NA))))
+
+Tabla_hombres <- do.call(rbind, lapply(seq(20, 80, by=10), function(x) {
+  filas <- Tabla_hombres[Tabla_hombres$Age == x, ]
+  do.call(rbind, lapply(0:9, function(y) {
+    data.frame(State = filas$State, Age = x + y, Able = filas$Able, Mild_Moderate = filas$Mild_Moderate,
+               Severe_Profound = filas$Severe_Profound, Dead = filas$Dead)
+  }))
+}))
+
+transiciones_hombres<-Tabla_hombres <- Tabla_hombres %>%
+  group_by(State) %>%
+  arrange(State, Age)
+
+Tabla_mujeres <- do.call(rbind, lapply(seq(20, 80, by=10), function(x) {
+  filas <- Tabla_mujeres[Tabla_mujeres$Age == x, ]
+  do.call(rbind, lapply(0:9, function(y) {
+    data.frame(State = filas$State, Age = x + y, Able = filas$Able, Mild_Moderate = filas$Mild_Moderate,
+               Severe_Profound = filas$Severe_Profound, Dead = filas$Dead)
+  }))
+}))
+
+transiciones_mujeres<-Tabla_mujeres <- Tabla_mujeres %>%
+  group_by(State) %>%
+  arrange(State, Age)
+
+```
+
+Crear 5000 personas, parte de la cartera de seguros.
+```{r}
+set.seed(77)
+
+Sexo <- sample(c(0, 1), size = 5000, replace = TRUE)
+Edad <- sample(20:80, size = 5000, replace = TRUE)
+Estado<- rep(0, times = 5000)
+Estado_anterior<- rep(0, times = 5000)
+
+Portafolio <- data.frame(Sexo = Sexo, Edad = Edad, Estado = Estado, Estado_anterior = Estado_anterior)
+
+```
+
+
+```{r warning=FALSE}
+set.seed(77)
+
+
+Simular<-function(n_simulaciones,horizonte,poblacion,transiciones_hombres,transiciones_mujeres){
+  
+# Inicialización de resultados demográficos
+resultados <- list()
+
+# Inicialización de resultados financieros
+resultados_finan<- list()
+
+# Una copia del Portafolio original, para resetearlo en cada simulación
+Portafol<-poblacion
+
+# Prima nivelada 
+Prima<- 10000000
+
+# Ciclo para las simulaciones
+for (sim in 1:n_simulaciones) {
+  
+  # Reseteo de datos de población
+  poblacion<-Portafol
+  
+  # Al inicio todos están sanos
+  resultado_por_sim <- data.frame(  hombres_saludable = nrow(poblacion[poblacion$Sexo == 0, ]) , 
+                                    hombres_enfermo = 0,
+                                    hombres_enfermo_grave = 0,
+                                    hombres_muerto = 0,
+                                    mujeres_saludable = nrow(poblacion[poblacion$Sexo == 1, ]), 
+                                    mujeres_enfermo = 0,
+                                    mujeres_enfermo_grave = 0,
+                                    mujeres_muerto = 0)
+  # Al inicio todos pagan como sanos 
+  resultado_finan_sim <- data.frame(  hombres_ingresos_sano = Prima*resultado_por_sim[1,1] ,
+                                      hombres_ingresos_enfermo = 0 ,
+                                      hombres_ingresos_grave = 0 ,
+                                      hombres_ingresos_muerto = 0 ,
+                                      hombres_egresos_sano = 0.1*Prima*resultado_por_sim[1,1],
+                                      hombres_egresos_enfermo = 0,
+                                      hombres_egresos_grave = 0,
+                                      hombres_egresos_muerto = 0,
+                                      mujeres_ingresos_sano = Prima*resultado_por_sim[1,5],
+                                      mujeres_ingresos_enfermo = 0 ,
+                                      mujeres_ingresos_grave = 0 ,
+                                      mujeres_ingresos_muerto = 0 ,
+                                      mujeres_egresos_sano = 0.1*Prima*resultado_por_sim[1,5],
+                                      mujeres_egresos_enfermo = 0,
+                                      mujeres_egresos_grave = 0,
+                                      mujeres_egresos_muerto = 0)
+  
+  # Ciclo para el paso del tiempo dentro de una simulación
+  for (anno in 1:horizonte) {
+    
+    # Se eliminan los mayores de 80, pues ya no son nuestros clientes, por lo que ya no nos interesa su estado
+    poblacion <- poblacion[poblacion$Edad < 80, ]
+    
+    # Se Actualiza el estado anterior para determinar beneficios 
+    poblacion$Estado_anterior<- poblacion$Estado
+    
+    # Se eliminan del estado 3 a las personas que murieron el año pasado 
+    poblacion <- poblacion[poblacion$Estado != 3, ]
+    
+    # Generar decisiones
+    Decision <- runif(nrow(poblacion), min = 0, max = 1)
+    
+    # Si en los estados ya no quedan más personas, se detiene el ciclo 
+    if(sum(resultado_por_sim[nrow(resultado_por_sim), ]) == 0){
+      break
+    }
+    
+    # Primero trabajamos con Mujeres
+    
+    # Vector con TRUE si son mujeres y False si son hombres
+    es_mujer <- poblacion$Sexo == 1
+    
+    # Ciclo para recorrer estados, entonces si son 2 o más sigue funcionando
+    # Se recorre del 0 al 2 porque el 3 es un estado absorbente
+    for (estado_actual in 0:2) {
+      
+      # Filtrar por estado actual
+      # Vector con TRUE si son mujeres y pertenecen al estado que nos compete de momento
+      en_estado <- es_mujer & (poblacion$Estado == estado_actual)
+      
+      # Condición para hacerlo más eficiente, si no hubieran personas en el estado
+      # y el sexo que nos compete no se ejecuta
+      if (sum(en_estado) > 0) {
+        
+        # Se toman las tablas con fuerzas de transición, específicamente de las
+        # personas que cumplan con ser mujeres y en el estado que se trabaja 
+        # en la iteración 
+        temp <- transiciones_mujeres[transiciones_mujeres$State == estado_actual, ]
+        
+        # Como para cada edad tenemos una fuerza de transición distinta 
+        # tomamos los indices que poseen en la tabla población de las personas 
+        # que cumplen con el sexo y estado de la itelación, además restamos 19 
+        # pues en la tabla de transiciones se comienza con personas de 20
+        edad_indices <- poblacion$Edad[en_estado] - 19
+        
+        # Se toma un subconjunto del vector de desiciones, de aquellas decisiones 
+        # que se encuentren en la misma posición que las personas en el portafolio
+        decision_actual <- Decision[en_estado]
+        
+        # Condiciones de transiciones
+        able_prob <- temp$Able[edad_indices]
+        mild_moderate_prob <- able_prob + temp$Mild_Moderate[edad_indices]
+        severe_prof_prob <- mild_moderate_prob + temp$Severe_Profound[edad_indices]
+      
+        # Aplicar transiciones
+        poblacion$Estado[en_estado & (decision_actual < able_prob)] <- 0
+        poblacion$Estado[en_estado & (decision_actual >= able_prob) & (decision_actual < mild_moderate_prob)] <- 1
+        poblacion$Estado[en_estado & (decision_actual >= mild_moderate_prob) & (decision_actual < severe_prof_prob)] <- 2
+        poblacion$Estado[en_estado & (decision_actual >= severe_prof_prob)] <- 3
+      }
+    }
+    
+    # Trabajando con Hombres, se realiza proceso simejante al de mujeres
+    es_hombre <- poblacion$Sexo == 0
+    for (estado_actual in 0:2) {
+      en_estado <- es_hombre & (poblacion$Estado == estado_actual)
+      
+      if (sum(en_estado) > 0) {
+        temp <- transiciones_hombres[transiciones_hombres$State == estado_actual, ]
+        
+        edad_indices <- poblacion$Edad[en_estado] - 19
+        
+        decision_actual <- Decision[en_estado]
+        
+        able_prob <- temp$Able[edad_indices]
+        mild_moderate_prob <- able_prob + temp$Mild_Moderate[edad_indices]
+        severe_prof_prob <- mild_moderate_prob + temp$Severe_Profound[edad_indices]
+        
+        poblacion$Estado[en_estado & (decision_actual < able_prob)] <- 0
+        poblacion$Estado[en_estado & (decision_actual >= able_prob) & (decision_actual < mild_moderate_prob)] <- 1
+        poblacion$Estado[en_estado & (decision_actual >= mild_moderate_prob) & (decision_actual < severe_prof_prob)] <- 2
+        poblacion$Estado[en_estado & (decision_actual >= severe_prof_prob)] <- 3
+      }
+    }
+    
+    # Contar resultados y agregar al data.frame de simulación
+    Personas <- data.frame(  hombres_saludable = nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 0), ]), 
+                                    hombres_enfermo = nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 1), ]),
+                                    hombres_enfermo_grave = nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 2), ]),
+                                    hombres_muerto = nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3), ]),
+                                    mujeres_saludable = nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 0), ]), 
+                                    mujeres_enfermo = nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 1), ]),
+                                    mujeres_enfermo_grave = nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 2), ]),
+                                    mujeres_muerto = nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3), ]))
+    
+    resultado_por_sim <- rbind(resultado_por_sim, Personas)
+    
+    # Resultados financieros del año y agregar al data.frame de simulación
+    Financiero <- data.frame(  hombres_ingresos_sano = Prima*Personas[1,1] ,
+                                      hombres_ingresos_enfermo = 0.75*Prima*Personas[1,2] ,
+                                      hombres_ingresos_grave = 0.25*Prima*Personas[1,3] ,
+                                      hombres_ingresos_muerto = 0 ,
+                                      hombres_egresos_sano = 0.05*Prima*Personas[1,1],
+                                      hombres_egresos_enfermo = 0.05*Prima*Personas[1,2],
+                                      hombres_egresos_grave = 0.05*Prima*Personas[1,3] + 2500000*Personas[1,3],
+                                      hombres_egresos_muerto = 50000000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 40000000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 20000000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]),
+                                      mujeres_ingresos_sano = Prima*Personas[1,5],
+                                      mujeres_ingresos_enfermo = 0.75*Prima*Personas[1,6] ,
+                                      mujeres_ingresos_grave = 0.25*Prima*Personas[1,7] ,
+                                      mujeres_ingresos_muerto = 0 ,
+                                      mujeres_egresos_sano = 0.05*Prima*Personas[1,5],
+                                      mujeres_egresos_enfermo = 0.05*Prima*Personas[1,6],
+                                      mujeres_egresos_grave = 0.05*Prima*Personas[1,7] + 2500000*Personas[1,7],
+                                      mujeres_egresos_muerto = 50000000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 40000000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 20000000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]))
+    
+    resultado_finan_sim <- rbind(resultado_finan_sim, Financiero)
+    
+    # Aumentar la edad de las personas 
+    poblacion$Edad <- poblacion$Edad + 1
+    
+  }
+  
+  # Guardar resultados de la simulación
+  resultados[[sim]] <- resultado_por_sim
+  
+  # Guardar resultados de la simulación financiera
+  resultados_finan[[sim]] <- resultado_finan_sim
+}
+return(list(resultados = resultados, resultados_finan = resultados_finan))
+}
+
+n_simulaciones <- 5 # Número de simulaciones
+n_annos <- 62  # Horizonte de proyección
+
+inicio <- Sys.time()
+
+Simulaciones <- Simular(n_simulaciones, n_annos, Portafolio, Tabla_hombres, Tabla_mujeres)
+
+Resultados_Agregados_demograficos <- lapply(seq_len(n_annos), function(anno) {
+  # Extraer los datos de cada simulación para el año específico
+  sim_data <- do.call(rbind, lapply(Simulaciones$resultados, function(sim) sim[anno, , drop = FALSE]))
+  
+  # Calcular el promedio de personas en cada estado para el año `anno`
+  data.frame(
+    año = anno,
+    hombres_saludable_mean = mean(sim_data$hombres_saludable),
+    hombres_enfermo_mean = mean(sim_data$hombres_enfermo),
+    hombres_enfermo_grave_mean = mean(sim_data$hombres_enfermo_grave),
+    hombres_muerto_mean = mean(sim_data$hombres_muerto),
+    mujeres_saludable_mean = mean(sim_data$mujeres_saludable),
+    mujeres_enfermo_mean = mean(sim_data$mujeres_enfermo),
+    mujeres_enfermo_grave_mean = mean(sim_data$mujeres_enfermo_grave),
+    mujeres_muerto_mean = mean(sim_data$mujeres_muerto)
+  )
+})
+
+# Convertir `Resultados_Agregados` en un único data frame
+Tabla_esperanzas_demograficas <- do.call(rbind, Resultados_Agregados_demograficos)
+
+Resultados_Agregados_financieros <- lapply(seq_len(n_annos), function(anno) {
+  # Extraer los datos de cada simulación para el año específico
+  sim_data <- do.call(rbind, lapply(Simulaciones$resultados_finan, function(sim) sim[anno, , drop = FALSE]))
+  
+  # Calcular el promedio de gastos por personas de cada sexo y en cada estado para el año `anno`
+  data.frame(
+    año = anno,
+    hombres_ingresos_sano_mean = mean(sim_data$hombres_ingresos_sano) ,
+    hombres_ingresos_enfermo_mean = mean(sim_data$hombres_ingresos_enfermo) ,
+    hombres_ingresos_grave_mean = mean(sim_data$hombres_ingresos_grave) ,
+    hombres_ingresos_muerto_mean = mean(sim_data$hombres_ingresos_muerto) ,
+    hombres_egresos_sano_mean = mean(sim_data$hombres_egresos_sano) ,
+    hombres_egresos_enfermo_mean = mean(sim_data$hombres_egresos_enfermo) ,
+    hombres_egresos_grave_mean = mean(sim_data$hombres_egresos_grave) ,
+    hombres_egresos_muerto_mean = mean(sim_data$hombres_egresos_muerto) ,
+    mujeres_ingresos_sano_mean = mean(sim_data$mujeres_ingresos_sano) ,
+    mujeres_ingresos_enfermo_mean = mean(sim_data$mujeres_ingresos_enfermo) ,
+    mujeres_ingresos_grave_mean = mean(sim_data$mujeres_ingresos_grave) ,
+    mujeres_ingresos_muerto_mean = mean(sim_data$mujeres_ingresos_muerto) ,
+    mujeres_egresos_sano_mean = mean(sim_data$mujeres_egresos_sano) ,
+    mujeres_egresos_enfermo_mean = mean(sim_data$mujeres_egresos_enfermo) ,
+    mujeres_egresos_grave_mean = mean(sim_data$mujeres_egresos_grave) ,
+    mujeres_egresos_muerto_mean = mean(sim_data$hmujeres_egresos_muerto))
+})
+
+# Convertir `Resultados_Agregados` en un único data frame
+Tabla_esperanzas_financieras <- do.call(rbind, Resultados_Agregados_financieros)
+
+fin <- Sys.time()
+
+# Calcular la duración
+duracion <- fin - inicio
+print(duracion)
+
+```
+
+
+```{r}
+
+```
+
