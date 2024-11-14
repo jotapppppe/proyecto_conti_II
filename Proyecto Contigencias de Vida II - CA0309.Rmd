@@ -39,6 +39,11 @@ anualidad_discreta_post(60, 3, 0, 0, 0.03, "M")
 ```
 
 ```{r}
+seguro(66, 4, 1, 3, 0.03, "M")
+```
+
+
+```{r}
 prima(20, 0.03, "M")
 ```
 
@@ -51,5 +56,12 @@ for(k in seq(20, 64, 1)){
 ```{r}
 prima_nivelada <- mean(primas)
 prima_nivelada
+```
+```{r}
+seguro_permanencia(68, 5, 0, 3, 0.03, "M")
+```
+
+```{r}
+tpxM_permanencia(70, 8, 0, 1, lista_tablas_masc)
 ```
 
