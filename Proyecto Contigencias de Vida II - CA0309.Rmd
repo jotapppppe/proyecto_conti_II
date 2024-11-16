@@ -52,8 +52,7 @@ primas <-0
 for(k in seq(20, 64, 1)){
   primas[k-19] <- prima(k, 0.03, "M")
 }
-```
-```{r}
+
 prima_nivelada <- mean(primas)
 prima_nivelada
 ```
@@ -62,6 +61,6 @@ seguro_permanencia(68, 5, 0, 3, 0.03, "M")
 ```
 
 ```{r}
-tpxM_permanencia(70, 8, 0, 1, lista_tablas_masc)
+tpxM_permanencia(70, 8, 2, 2, lista_tablas_masc)
 ```
 
