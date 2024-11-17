@@ -253,7 +253,7 @@ for (sim in 1:n_simulaciones) {
 return(list(resultados = resultados, resultados_finan = resultados_finan))
 }
 
-n_simulaciones <- 1000 # Número de simulaciones
+n_simulaciones <- 5 # Número de simulaciones
 n_annos <- 62  # Horizonte de proyección
 
 inicio <- Sys.time()
@@ -303,7 +303,7 @@ Resultados_Agregados_financieros <- lapply(seq_len(n_annos), function(anno) {
     mujeres_egresos_sano_mean = mean(sim_data$mujeres_egresos_sano) ,
     mujeres_egresos_enfermo_mean = mean(sim_data$mujeres_egresos_enfermo) ,
     mujeres_egresos_grave_mean = mean(sim_data$mujeres_egresos_grave) ,
-    mujeres_egresos_muerto_mean = mean(sim_data$hmujeres_egresos_muerto))
+    mujeres_egresos_muerto_mean = mean(sim_data$mujeres_egresos_muerto))
 })
 
 # Convertir `Resultados_Agregados` en un único data frame
