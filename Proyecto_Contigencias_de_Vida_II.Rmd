@@ -22,31 +22,137 @@ source("code/setup.R")
 
 En este documento, se harán los cálculos correspondientes para encontrar las primas.
 
-# Cálculo de la prima.
+# Cálculo de la primas.
 
 ## Caso Normal
+
+### Hombres
+
+#### Prima de Riesgo
+
 ```{r echo=FALSE}
 primas <-0
 primas <- sapply(20:64, function(k) prima(k, 0.03, "M"))
 
-prima_nivelada <- mean(primas)
-prima_nivelada
+prima_nivelada_riesgo_h <- mean(primas)
+prima_nivelada_riesgo_h
+```
+#### Prima Comercial
+```{r echo=FALSE}
+prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/90
+prima_nivelada_comercial_h
 ```
 
+### Mujeres
+
+#### Prima de Riesgo
+```{r echo=FALSE}
+primas <-0
+primas <- sapply(20:64, function(k) prima(k, 0.03, "F"))
+
+prima_nivelada_riesgo_m <- mean(primas)
+prima_nivelada_riesgo_m
+```
+#### Prima Comercial
+```{r echo=FALSE}
+prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/90
+prima_nivelada_comercial_m
+```
+
+### Niveladas
+```{r echo=FALSE}
+prima_nivelada_riesgo <- (prima_nivelada_riesgo_h + prima_nivelada_riesgo_m)/2
+prima_nivelada_comercial <- (prima_nivelada_comercial_h + prima_nivelada_comercial_m)/2
+
+cat("La prima nivelada de Riesgo es:", prima_nivelada_riesgo, "\n")
+cat("La prima nivelada Comercial es:", prima_nivelada_comercial, "\n")
+```
+
+
 ## Caso Optimista
+
+### Hombres
+
+#### Prima de Riesgo
+
 ```{r echo=FALSE}
 primas <-0
 primas <- sapply(20:64, function(k) prima(k, 0.02, "M"))
 
-prima_nivelada <- mean(primas)
-prima_nivelada
+prima_nivelada_riesgo_h <- mean(primas)
+prima_nivelada_riesgo_h
+```
+#### Prima Comercial
+```{r echo=FALSE}
+prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/90
+prima_nivelada_comercial_h
 ```
 
-## Caso pesimista
+### Mujeres
+
+#### Prima de Riesgo
+```{r echo=FALSE}
+primas <-0
+primas <- sapply(20:64, function(k) prima(k, 0.02, "F"))
+
+prima_nivelada_riesgo_m <- mean(primas)
+prima_nivelada_riesgo_m
+```
+#### Prima Comercial
+```{r echo=FALSE}
+prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/90
+prima_nivelada_comercial_m
+```
+
+### Niveladas
+```{r echo=FALSE}
+prima_nivelada_riesgo <- (prima_nivelada_riesgo_h + prima_nivelada_riesgo_m)/2
+prima_nivelada_comercial <- (prima_nivelada_comercial_h + prima_nivelada_comercial_m)/2
+
+cat("La prima nivelada de Riesgo es:", prima_nivelada_riesgo, "\n")
+cat("La prima nivelada Comercial es:", prima_nivelada_comercial, "\n")
+```
+
+## Caso Pesimista
+
+### Hombres
+
+#### Prima de Riesgo
+
 ```{r echo=FALSE}
 primas <-0
 primas <- sapply(20:64, function(k) prima(k, 0.04, "M"))
 
-prima_nivelada <- mean(primas)
-prima_nivelada
+prima_nivelada_riesgo_h <- mean(primas)
+prima_nivelada_riesgo_h
+```
+#### Prima Comercial
+```{r echo=FALSE}
+prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/90
+prima_nivelada_comercial_h
+```
+
+### Mujeres
+
+#### Prima de Riesgo
+```{r echo=FALSE}
+primas <-0
+primas <- sapply(20:64, function(k) prima(k, 0.04, "F"))
+
+prima_nivelada_riesgo_m <- mean(primas)
+prima_nivelada_riesgo_m
+```
+#### Prima Comercial
+```{r echo=FALSE}
+prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/90
+prima_nivelada_comercial_m
+```
+
+### Niveladas
+```{r echo=FALSE}
+prima_nivelada_riesgo <- (prima_nivelada_riesgo_h + prima_nivelada_riesgo_m)/2
+prima_nivelada_comercial <- (prima_nivelada_comercial_h + prima_nivelada_comercial_m)/2
+
+cat("La prima nivelada de Riesgo es:", prima_nivelada_riesgo, "\n")
+cat("La prima nivelada Comercial es:", prima_nivelada_comercial, "\n")
 ```
