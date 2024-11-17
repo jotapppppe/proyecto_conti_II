@@ -13,7 +13,7 @@ pacman::p_load(
 )
 
 # Valores iniciales
-interes <- 0.05
+interes <- 10.88/100
 
 # R scripts
 source('code/lectura_de_datos.R')
