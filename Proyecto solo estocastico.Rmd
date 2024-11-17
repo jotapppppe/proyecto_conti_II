@@ -9,6 +9,9 @@ Paquetes
 ```{r}
 library(dplyr)
 library(readxl)
+library(ggplot2)
+library(tidyr)
+
 ```
 
 
@@ -316,6 +319,107 @@ duracion <- fin - inicio
 print(duracion)
 
 ```
+
+
+```{r}
+
+# Convertir la tabla demográfica a formato largo para graficar
+Tabla_esperanzas_demograficas_long <- tidyr::pivot_longer(
+  data = Tabla_esperanzas_demograficas, 
+  cols = -año, 
+  names_to = "grupo_estado", 
+  values_to = "poblacion_promedio"
+)
+
+# Separar grupo y estado para mejor categorización
+Tabla_esperanzas_demograficas_long <- Tabla_esperanzas_demograficas_long %>%
+  separate(grupo_estado, into = c("sexo", "estado"), sep = "_", extra = "merge")
+
+# Graficar
+ggplot(Tabla_esperanzas_demograficas_long, aes(x = año, y = poblacion_promedio, color = estado)) +
+  geom_line(size = 1) +
+  facet_wrap(~sexo, scales = "free_y") +
+  labs(
+    title = "Evolución de la Población Promedio por Estado y Sexo",
+    x = "Año",
+    y = "Población Promedio",
+    color = "Estado"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+```
+
+```{r}
+# Convertir la tabla financiera a formato largo
+Tabla_esperanzas_financieras_long <- tidyr::pivot_longer(
+  data = Tabla_esperanzas_financieras, 
+  cols = -año, 
+  names_to = "grupo_tipo",
+  values_to = "monto_promedio"
+)
+
+# Separar las columnas en sexo, tipo (ingresos/egresos) y estado
+Tabla_esperanzas_financieras_long <- Tabla_esperanzas_financieras_long %>%
+  separate(grupo_tipo, into = c("sexo", "tipo", "estado"), sep = "_", extra = "merge")
+
+# Graficar
+ggplot(Tabla_esperanzas_financieras_long, aes(x = año, y = monto_promedio, fill = estado)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_grid(tipo ~ sexo, scales = "free_y") +
+  labs(
+    title = "Ingresos y Egresos Promedio por Estado y Sexo",
+    x = "Año",
+    y = "Monto Promedio",
+    fill = "Estado"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+```
+
+
+```{r}
+# Calcular flujos netos anuales por sexo
+Tabla_esperanzas_financieras <- Tabla_esperanzas_financieras %>%
+  mutate(
+    hombres_flujo_neto = hombres_ingresos_sano_mean + hombres_ingresos_enfermo_mean +
+                         hombres_ingresos_grave_mean + hombres_ingresos_muerto_mean -
+                         (hombres_egresos_sano_mean + hombres_egresos_enfermo_mean +
+                          hombres_egresos_grave_mean + hombres_egresos_muerto_mean),
+    mujeres_flujo_neto = mujeres_ingresos_sano_mean + mujeres_ingresos_enfermo_mean +
+                         mujeres_ingresos_grave_mean + mujeres_ingresos_muerto_mean -
+                         (mujeres_egresos_sano_mean + mujeres_egresos_enfermo_mean +
+                          mujeres_egresos_grave_mean + mujeres_egresos_muerto_mean)
+  )
+
+# Convertir a formato largo
+flujo_neto <- Tabla_esperanzas_financieras %>%
+  select(año, hombres_flujo_neto, mujeres_flujo_neto) %>%
+  tidyr::pivot_longer(cols = -año, names_to = "sexo", values_to = "flujo_neto") %>%
+  mutate(sexo = ifelse(sexo == "hombres_flujo_neto", "Hombres", "Mujeres"))
+
+# Graficar
+ggplot(flujo_neto, aes(x = año, y = flujo_neto, color = sexo)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Flujo Neto Promedio Anual por Sexo",
+    x = "Año",
+    y = "Flujo Neto",
+    color = "Sexo"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+```
+
+
+
+```{r}
+print(flujo_neto)
+
+```
+
 
 
 ```{r}
