@@ -18,6 +18,7 @@ output:
 
 ```{r}
 source("code/setup.R")
+source("code/graficos.R")
 ```
 
 ```{r}
@@ -62,5 +63,14 @@ seguro_permanencia(68, 5, 0, 3, 0.03, "M")
 
 ```{r}
 tpxM_permanencia(70, 8, 2, 2, lista_tablas_masc)
+```
+```{r}
+print(able)
+
+print(mild_moderate)
+
+print(severe_profound)
+
+print(dead)
 ```
 
