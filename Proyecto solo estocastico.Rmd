@@ -11,7 +11,7 @@ library(dplyr)
 library(readxl)
 library(ggplot2)
 library(tidyr)
-
+library(plotly)
 ```
 
 
@@ -319,9 +319,10 @@ duracion <- fin - inicio
 print(duracion)
 
 ```
-
-
 ```{r}
+
+
+
 
 # Convertir la tabla demográfica a formato largo para graficar
 Tabla_esperanzas_demograficas_long <- tidyr::pivot_longer(
@@ -335,8 +336,8 @@ Tabla_esperanzas_demograficas_long <- tidyr::pivot_longer(
 Tabla_esperanzas_demograficas_long <- Tabla_esperanzas_demograficas_long %>%
   separate(grupo_estado, into = c("sexo", "estado"), sep = "_", extra = "merge")
 
-# Graficar
-ggplot(Tabla_esperanzas_demograficas_long, aes(x = año, y = poblacion_promedio, color = estado)) +
+# Se crea el gráfico
+grafico <- ggplot(Tabla_esperanzas_demograficas_long, aes(x = año, y = poblacion_promedio, color = estado)) +
   geom_line(size = 1) +
   facet_wrap(~sexo, scales = "free_y") +
   labs(
@@ -347,6 +348,12 @@ ggplot(Tabla_esperanzas_demograficas_long, aes(x = año, y = poblacion_promedio,
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
+
+# Convertir a gráfico interactivo con plotly
+grafico_interactivo <- ggplotly(grafico)
+
+# Mostrar el gráfico interactivo
+grafico_interactivo
 
 ```
 
@@ -363,8 +370,8 @@ Tabla_esperanzas_financieras_long <- tidyr::pivot_longer(
 Tabla_esperanzas_financieras_long <- Tabla_esperanzas_financieras_long %>%
   separate(grupo_tipo, into = c("sexo", "tipo", "estado"), sep = "_", extra = "merge")
 
-# Graficar
-ggplot(Tabla_esperanzas_financieras_long, aes(x = año, y = monto_promedio, fill = estado)) +
+# Se crea el gráfico 
+grafico <- ggplot(Tabla_esperanzas_financieras_long, aes(x = año, y = monto_promedio, fill = estado)) +
   geom_bar(stat = "identity", position = "stack") +
   facet_grid(tipo ~ sexo, scales = "free_y") +
   labs(
@@ -375,6 +382,12 @@ ggplot(Tabla_esperanzas_financieras_long, aes(x = año, y = monto_promedio, fill
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
+
+# Convertir a gráfico interactivo con plotly
+grafico_interactivo_2 <- ggplotly(grafico)
+
+# Mostrar el gráfico interactivo
+grafico_interactivo_2
 
 ```
 
@@ -399,8 +412,8 @@ flujo_neto <- Tabla_esperanzas_financieras %>%
   tidyr::pivot_longer(cols = -año, names_to = "sexo", values_to = "flujo_neto") %>%
   mutate(sexo = ifelse(sexo == "hombres_flujo_neto", "Hombres", "Mujeres"))
 
-# Graficar
-ggplot(flujo_neto, aes(x = año, y = flujo_neto, color = sexo)) +
+# Se crea el gráfico
+grafico <- ggplot(flujo_neto, aes(x = año, y = flujo_neto, color = sexo)) +
   geom_line(size = 1) +
   labs(
     title = "Flujo Neto Promedio Anual por Sexo",
@@ -410,6 +423,12 @@ ggplot(flujo_neto, aes(x = año, y = flujo_neto, color = sexo)) +
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
+
+# Convertir a gráfico interactivo
+grafico_interactivo_3 <- ggplotly(grafico)
+
+# Mostrar el gráfico interactivo
+grafico_interactivo_3
 
 ```
 
