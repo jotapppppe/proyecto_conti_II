@@ -87,7 +87,7 @@ resultados_finan<- list()
 Portafol<-poblacion
 
 # Prima nivelada 
-Prima<- 10000000
+Prima<- 7000000
 
 # Ciclo para las simulaciones
 for (sim in 1:n_simulaciones) {
