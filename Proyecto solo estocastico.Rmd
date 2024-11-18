@@ -270,14 +270,14 @@ Resultados_Agregados_demograficos <- lapply(seq_len(n_annos), function(anno) {
   # Calcular el promedio de personas en cada estado para el año `anno`
   data.frame(
     año = anno,
-    hombres_saludable_mean = mean(sim_data$hombres_saludable),
-    hombres_enfermo_mean = mean(sim_data$hombres_enfermo),
-    hombres_enfermo_grave_mean = mean(sim_data$hombres_enfermo_grave),
-    hombres_muerto_mean = mean(sim_data$hombres_muerto),
-    mujeres_saludable_mean = mean(sim_data$mujeres_saludable),
-    mujeres_enfermo_mean = mean(sim_data$mujeres_enfermo),
-    mujeres_enfermo_grave_mean = mean(sim_data$mujeres_enfermo_grave),
-    mujeres_muerto_mean = mean(sim_data$mujeres_muerto)
+    hombres_saludable = mean(sim_data$hombres_saludable),
+    hombres_enfermo = mean(sim_data$hombres_enfermo),
+    hombres_enfermo_grave = mean(sim_data$hombres_enfermo_grave),
+    hombres_muerto = mean(sim_data$hombres_muerto),
+    mujeres_saludable = mean(sim_data$mujeres_saludable),
+    mujeres_enfermo = mean(sim_data$mujeres_enfermo),
+    mujeres_enfermo_grave = mean(sim_data$mujeres_enfermo_grave),
+    mujeres_muerto = mean(sim_data$mujeres_muerto)
   )
 })
 
@@ -291,22 +291,22 @@ Resultados_Agregados_financieros <- lapply(seq_len(n_annos), function(anno) {
   # Calcular el promedio de gastos por personas de cada sexo y en cada estado para el año `anno`
   data.frame(
     año = anno,
-    hombres_ingresos_sano_mean = mean(sim_data$hombres_ingresos_sano) ,
-    hombres_ingresos_enfermo_mean = mean(sim_data$hombres_ingresos_enfermo) ,
-    hombres_ingresos_grave_mean = mean(sim_data$hombres_ingresos_grave) ,
-    hombres_ingresos_muerto_mean = mean(sim_data$hombres_ingresos_muerto) ,
-    hombres_egresos_sano_mean = mean(sim_data$hombres_egresos_sano) ,
-    hombres_egresos_enfermo_mean = mean(sim_data$hombres_egresos_enfermo) ,
-    hombres_egresos_grave_mean = mean(sim_data$hombres_egresos_grave) ,
-    hombres_egresos_muerto_mean = mean(sim_data$hombres_egresos_muerto) ,
-    mujeres_ingresos_sano_mean = mean(sim_data$mujeres_ingresos_sano) ,
-    mujeres_ingresos_enfermo_mean = mean(sim_data$mujeres_ingresos_enfermo) ,
-    mujeres_ingresos_grave_mean = mean(sim_data$mujeres_ingresos_grave) ,
-    mujeres_ingresos_muerto_mean = mean(sim_data$mujeres_ingresos_muerto) ,
-    mujeres_egresos_sano_mean = mean(sim_data$mujeres_egresos_sano) ,
-    mujeres_egresos_enfermo_mean = mean(sim_data$mujeres_egresos_enfermo) ,
-    mujeres_egresos_grave_mean = mean(sim_data$mujeres_egresos_grave) ,
-    mujeres_egresos_muerto_mean = mean(sim_data$mujeres_egresos_muerto))
+    hombres_ingresos_sano = mean(sim_data$hombres_ingresos_sano) ,
+    hombres_ingresos_enfermo = mean(sim_data$hombres_ingresos_enfermo) ,
+    hombres_ingresos_enfermo_grave = mean(sim_data$hombres_ingresos_grave) ,
+    hombres_ingresos_muerto = mean(sim_data$hombres_ingresos_muerto) ,
+    hombres_egresos_sano = mean(sim_data$hombres_egresos_sano) ,
+    hombres_egresos_enfermo = mean(sim_data$hombres_egresos_enfermo) ,
+    hombres_egresos_enfermo_grave = mean(sim_data$hombres_egresos_grave) ,
+    hombres_egresos_muerto = mean(sim_data$hombres_egresos_muerto) ,
+    mujeres_ingresos_sano = mean(sim_data$mujeres_ingresos_sano) ,
+    mujeres_ingresos_enfermo = mean(sim_data$mujeres_ingresos_enfermo) ,
+    mujeres_ingresos_enfermo_grave = mean(sim_data$mujeres_ingresos_grave) ,
+    mujeres_ingresos_muerto = mean(sim_data$mujeres_ingresos_muerto) ,
+    mujeres_egresos_sano = mean(sim_data$mujeres_egresos_sano) ,
+    mujeres_egresos_enfermo = mean(sim_data$mujeres_egresos_enfermo) ,
+    mujeres_egresos_enfermo_grave = mean(sim_data$mujeres_egresos_grave) ,
+    mujeres_egresos_muerto = mean(sim_data$mujeres_egresos_muerto))
 })
 
 # Convertir `Resultados_Agregados` en un único data frame
@@ -396,14 +396,14 @@ grafico_interactivo_2
 # Calcular flujos netos anuales por sexo
 Tabla_esperanzas_financieras <- Tabla_esperanzas_financieras %>%
   mutate(
-    hombres_flujo_neto = hombres_ingresos_sano_mean + hombres_ingresos_enfermo_mean +
-                         hombres_ingresos_grave_mean + hombres_ingresos_muerto_mean -
-                         (hombres_egresos_sano_mean + hombres_egresos_enfermo_mean +
-                          hombres_egresos_grave_mean + hombres_egresos_muerto_mean),
-    mujeres_flujo_neto = mujeres_ingresos_sano_mean + mujeres_ingresos_enfermo_mean +
-                         mujeres_ingresos_grave_mean + mujeres_ingresos_muerto_mean -
-                         (mujeres_egresos_sano_mean + mujeres_egresos_enfermo_mean +
-                          mujeres_egresos_grave_mean + mujeres_egresos_muerto_mean)
+    hombres_flujo_neto = hombres_ingresos_sano + hombres_ingresos_enfermo +
+                         hombres_ingresos_enfermo_grave + hombres_ingresos_muerto -
+                         (hombres_egresos_sano + hombres_egresos_enfermo +
+                          hombres_egresos_enfermo_grave + hombres_egresos_muerto),
+    mujeres_flujo_neto = mujeres_ingresos_sano + mujeres_ingresos_enfermo +
+                         mujeres_ingresos_enfermo_grave + mujeres_ingresos_muerto -
+                         (mujeres_egresos_sano + mujeres_egresos_enfermo +
+                          mujeres_egresos_enfermo_grave + mujeres_egresos_muerto)
   )
 
 # Convertir a formato largo
