@@ -21,7 +21,6 @@ source("code/setup.R")
 ```
 
 
-
 En este documento, se harán los cálculos correspondientes para encontrar las primas.
 
 # Cálculo de la primas.

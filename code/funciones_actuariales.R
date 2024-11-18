@@ -52,8 +52,8 @@ prima <- function(x, inflacion, s){
 prima_riesgo <- function(x, inflacion, s){
   n <- 80 - x
   m <- 65 - x
-  res <- (30000000 * seguro(x, n, 0, 3, inflacion, s) + 20000000*seguro(x, n, 1, 3, inflacion, s) + 10000000*seguro(x, n, 2, 3, inflacion, s) 
+  res <- (30000000 * seguro(x, n, 0, 3, inflacion, s) + 20000000 * seguro(x, n, 1, 3, inflacion, s) + 10000000 * seguro(x, n, 2, 3, inflacion, s) 
           + 2500000 * anualidad_discreta_permanencia(x, n, 2, 2, inflacion, s)) / (anualidad_discreta(x, m, 0, 0, inflacion, s) + 0.75 * anualidad_discreta(x, m, 1, 1, inflacion, s) 
-                                                                                                                                   + 0.25 * anualidad_discreta(x, m, 2, 2, inflacion, s))
+                                                                                                                                + 0.25 * anualidad_discreta(x, m, 2, 2, inflacion, s))
   return (res)
 }
