@@ -87,7 +87,7 @@ resultados_finan<- list()
 Portafol<-poblacion
 
 # Prima nivelada 
-Prima<- 7000000
+Prima<- 7339185
 
 # Ciclo para las simulaciones
 for (sim in 1:n_simulaciones) {
@@ -256,7 +256,7 @@ for (sim in 1:n_simulaciones) {
 return(list(resultados = resultados, resultados_finan = resultados_finan))
 }
 
-n_simulaciones <- 10 # Número de simulaciones
+n_simulaciones <- 5000 # Número de simulaciones
 n_annos <- 62  # Horizonte de proyección
 
 inicio <- Sys.time()
