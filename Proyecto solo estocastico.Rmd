@@ -109,7 +109,7 @@ for (sim in 1:n_simulaciones) {
                                       hombres_ingresos_enfermo = 0 ,
                                       hombres_ingresos_grave = 0 ,
                                       hombres_ingresos_muerto = 0 ,
-                                      hombres_egresos_sano = 0.1*Prima*resultado_por_sim[1,1],
+                                      hombres_egresos_sano = 0.03*Prima*resultado_por_sim[1,1],
                                       hombres_egresos_enfermo = 0,
                                       hombres_egresos_grave = 0,
                                       hombres_egresos_muerto = 0,
@@ -117,7 +117,7 @@ for (sim in 1:n_simulaciones) {
                                       mujeres_ingresos_enfermo = 0 ,
                                       mujeres_ingresos_grave = 0 ,
                                       mujeres_ingresos_muerto = 0 ,
-                                      mujeres_egresos_sano = 0.1*Prima*resultado_por_sim[1,5],
+                                      mujeres_egresos_sano = 0.03*Prima*resultado_por_sim[1,5],
                                       mujeres_egresos_enfermo = 0,
                                       mujeres_egresos_grave = 0,
                                       mujeres_egresos_muerto = 0)
@@ -227,18 +227,18 @@ for (sim in 1:n_simulaciones) {
                                       hombres_ingresos_enfermo = 0.75*Prima*Personas[1,2] ,
                                       hombres_ingresos_grave = 0.25*Prima*Personas[1,3] ,
                                       hombres_ingresos_muerto = 0 ,
-                                      hombres_egresos_sano = 0.05*Prima*Personas[1,1],
-                                      hombres_egresos_enfermo = 0.05*Prima*Personas[1,2],
-                                      hombres_egresos_grave = 0.05*Prima*Personas[1,3] + 2500000*Personas[1,3],
-                                      hombres_egresos_muerto = 50000000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 40000000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 20000000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]),
+                                      hombres_egresos_sano = 0.03*Prima*Personas[1,1],
+                                      hombres_egresos_enfermo = 0.03*Prima*Personas[1,2],
+                                      hombres_egresos_grave = 0.03*Prima*Personas[1,3] + 2500000*Personas[1,3],
+                                      hombres_egresos_muerto = 30400000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 20400000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 10400000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]),
                                       mujeres_ingresos_sano = Prima*Personas[1,5],
                                       mujeres_ingresos_enfermo = 0.75*Prima*Personas[1,6] ,
                                       mujeres_ingresos_grave = 0.25*Prima*Personas[1,7] ,
                                       mujeres_ingresos_muerto = 0 ,
-                                      mujeres_egresos_sano = 0.05*Prima*Personas[1,5],
-                                      mujeres_egresos_enfermo = 0.05*Prima*Personas[1,6],
-                                      mujeres_egresos_grave = 0.05*Prima*Personas[1,7] + 2500000*Personas[1,7],
-                                      mujeres_egresos_muerto = 50000000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 40000000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 20000000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]))
+                                      mujeres_egresos_sano = 0.03*Prima*Personas[1,5],
+                                      mujeres_egresos_enfermo = 0.03*Prima*Personas[1,6],
+                                      mujeres_egresos_grave = 0.03*Prima*Personas[1,7] + 2500000*Personas[1,7],
+                                      mujeres_egresos_muerto = 30400000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 20400000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 10400000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]))
     
     resultado_finan_sim <- rbind(resultado_finan_sim, Financiero)
     
