@@ -16,8 +16,42 @@ output:
   extra_dependencies: ['amsmath', 'someotherpackage']
 ---
 
-```{r}
+```{r include=FALSE}
 source("code/setup.R")
+```
+
+```{r include=FALSE}
+set.seed(77)
+
+Sexo <- sample(c(0, 1), size = 5000, replace = TRUE)
+Edad <- sample(20:64, size = 5000, replace = TRUE)
+Estado<- rep(0, times = 5000)
+Estado_anterior<- rep(0, times = 5000)
+
+Portafolio <- data.frame(Sexo = Sexo, Edad = Edad, Estado = Estado, Estado_anterior = Estado_anterior)
+
+```
+
+```{r include=FALSE}
+portafolio_graficos <- Portafolio %>%
+  group_by(Edad, Sexo) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  mutate(Sexo_Nombre = ifelse(Sexo == 0, "Hombres", "Mujeres"))
+
+
+```
+
+```{r echo=FALSE}
+gg <- ggplot(portafolio_graficos, aes(x = factor(Edad), y = n, fill = Sexo_Nombre)) +
+      geom_bar(stat = "identity", position = "stack") +
+      labs(x = "Edad", y = "Cantidad", fill = "Sexo", title = "Cantidad de personas del portafolio inicial por edad y sexo") +
+      scale_fill_manual(values = c("Hombres" = "royalblue4", "Mujeres" = "#FFA0F5")) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), plot.title = element_text(hjust = 0.5))
+
+p <- ggplotly(gg)
+p
 ```
 
 
@@ -40,7 +74,7 @@ prima_nivelada_riesgo_h
 ```
 #### Prima Comercial
 ```{r echo=FALSE}
-prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/90
+prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/80
 prima_nivelada_comercial_h
 ```
 
@@ -56,7 +90,7 @@ prima_nivelada_riesgo_m
 ```
 #### Prima Comercial
 ```{r echo=FALSE}
-prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/90
+prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/80
 prima_nivelada_comercial_m
 ```
 
@@ -85,7 +119,7 @@ prima_nivelada_riesgo_h
 ```
 #### Prima Comercial
 ```{r echo=FALSE}
-prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/90
+prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/80
 prima_nivelada_comercial_h
 ```
 
@@ -101,7 +135,7 @@ prima_nivelada_riesgo_m
 ```
 #### Prima Comercial
 ```{r echo=FALSE}
-prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/90
+prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/80
 prima_nivelada_comercial_m
 ```
 
@@ -129,7 +163,7 @@ prima_nivelada_riesgo_h
 ```
 #### Prima Comercial
 ```{r echo=FALSE}
-prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/90
+prima_nivelada_comercial_h <- (100 * prima_nivelada_riesgo_h)/80
 prima_nivelada_comercial_h
 ```
 
@@ -145,7 +179,7 @@ prima_nivelada_riesgo_m
 ```
 #### Prima Comercial
 ```{r echo=FALSE}
-prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/90
+prima_nivelada_comercial_m <- (100 * prima_nivelada_riesgo_m)/80
 prima_nivelada_comercial_m
 ```
 
