@@ -166,11 +166,11 @@ for (sim in 1:n_simulaciones) {
         
         # Como para cada edad tenemos una fuerza de transición distinta 
         # tomamos los indices que poseen en la tabla población de las personas 
-        # que cumplen con el sexo y estado de la itelación, además restamos 19 
+        # que cumplen con el sexo y estado de la iteración, además restamos 19 
         # pues en la tabla de transiciones se comienza con personas de 20
         edad_indices <- poblacion$Edad[en_estado] - 19
         
-        # Se toma un subconjunto del vector de desiciones, de aquellas decisiones 
+        # Se toma un subconjunto del vector de decisiones, de aquellas decisiones 
         # que se encuentren en la misma posición que las personas en el portafolio
         decision_actual <- Decision[en_estado]
         
@@ -187,7 +187,7 @@ for (sim in 1:n_simulaciones) {
       }
     }
     
-    # Trabajando con Hombres, se realiza proceso simejante al de mujeres
+    # Trabajando con Hombres, se realiza proceso semejante al de mujeres
     es_hombre <- poblacion$Sexo == 0
     for (estado_actual in 0:2) {
       en_estado <- es_hombre & (poblacion$Estado == estado_actual)
@@ -230,7 +230,7 @@ for (sim in 1:n_simulaciones) {
                                       hombres_egresos_sano = 0.03*Prima*Personas[1,1],
                                       hombres_egresos_enfermo = 0.03*Prima*Personas[1,2],
                                       hombres_egresos_grave = 0.03*Prima*Personas[1,3] + 2500000*Personas[1,3],
-                                      hombres_egresos_muerto = 30400000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 20400000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 10400000 * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]),
+                                      hombres_egresos_muerto = (30000000 + Prima*0.04) * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + (20000000 + Prima*0.04) * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + (10000000 + Prima*0.04) * nrow(poblacion[(poblacion$Sexo == 0) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]),
                                       mujeres_ingresos_sano = Prima*nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 0) & (poblacion$Edad<65), ]),
                                       mujeres_ingresos_enfermo = 0.75*Prima*nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 1) & (poblacion$Edad<65), ]) ,
                                       mujeres_ingresos_grave = 0.25*Prima*nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 2) & (poblacion$Edad<65), ]) ,
@@ -238,7 +238,7 @@ for (sim in 1:n_simulaciones) {
                                       mujeres_egresos_sano = 0.03*Prima*Personas[1,5],
                                       mujeres_egresos_enfermo = 0.03*Prima*Personas[1,6],
                                       mujeres_egresos_grave = 0.03*Prima*Personas[1,7] + 2500000*Personas[1,7],
-                                      mujeres_egresos_muerto = 30400000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + 20400000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + 10400000 * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]))
+                                      mujeres_egresos_muerto = (30000000 + Prima*0.04) * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 0), ]) + (20000000 + Prima*0.04) * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 1), ]) + (10000000 + Prima*0.04) * nrow(poblacion[(poblacion$Sexo == 1) & (poblacion$Estado == 3) & (poblacion$Estado_anterior == 2), ]))
      
     resultado_finan_sim <- rbind(resultado_finan_sim, Financiero)
     
