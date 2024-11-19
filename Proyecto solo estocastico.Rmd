@@ -87,7 +87,7 @@ resultados_finan<- list()
 Portafol<-poblacion
 
 # Prima nivelada 
-Prima<- 7339185
+Prima<- 6597060
 
 # Ciclo para las simulaciones
 for (sim in 1:n_simulaciones) {
@@ -440,8 +440,22 @@ print(flujo_neto)
 ```
 
 
+```{r}
+
+```
 
 ```{r}
+# Filtrar para hombres
+flujo_hombres = flujo_neto %>% filter(sexo == "Hombres")
+
+
+# Filtrar para mujeres
+flujo_mujeres = flujo_neto %>% filter(sexo == "Mujeres")
+
+
+# Guardar los data frames como CSV
+write.csv(flujo_hombres, 'flujo_hombres_norm.csv', row.names = FALSE)
+write.csv(flujo_mujeres, 'flujo_mujeres_norm.csv', row.names = FALSE)
 
 ```
 
