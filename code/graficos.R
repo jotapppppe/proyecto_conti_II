@@ -3,6 +3,23 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
+tablas_probabilidad_transiciones <- tablas_probabilidad_transiciones %>%
+  mutate(across(c(`0`, `1`, `2`, `3`), as.numeric))  # Si todas deben ser numéricas
+
+tablas_probabilidad_transiciones <- tablas_probabilidad_transiciones %>%
+  mutate(
+    `Estado inicial` = as.character(`Estado inicial`),
+    Edad = as.numeric(Edad)
+  )
+
+
+tabla_larga <- tablas_probabilidad_transiciones %>%
+  pivot_longer(
+    cols = c(`0`, `1`, `2`, `3`),  # Incluye nombres de columnas válidos
+    names_to = "Estado_Destino",
+    values_to = "Probabilidad"
+  )
+
 
 datos_able <- tabla_larga %>% filter(`Estado inicial` == "Able" & Estado_Destino != "0")
 
@@ -12,14 +29,14 @@ able <- ggplot(datos_able, aes(x = Edad, y = Probabilidad, color = Estado_Destin
   geom_point(size = 2) +
   theme_minimal() +
   labs(
-    title = "Probabilidades de Transición - Estado Inicial: Able",
+    title = "Estado Inicial: Sano",
     x = "Edad",
     y = "Probabilidad",
     color = "Estado Destino"
   ) +
   scale_color_manual(
     values = c("blue", "purple", "brown"),
-    labels = c( "Able to Mild_Moderate", "Able to Severe_Profound", "Able to Dead")
+    labels = c( "Sano a Enfermo", "Sano a Enfermo Grave", "Sano a Fallecimiento")
   ) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
@@ -51,14 +68,14 @@ mild_moderate <- ggplot(datos_mild_moderate, aes(x = Edad, y = Probabilidad, col
   geom_point(size = 2) +
   theme_minimal() +
   labs(
-    title = "Probabilidades de Transición - Estado Inicial: Mild_Moderate",
+    title = "Estado Inicial: Enfermo",
     x = "Edad",
     y = "Probabilidad",
     color = "Estado Destino"
   ) +
   scale_color_manual(
     values = c("blue", "purple", "brown"),
-    labels = c( "Mild_Moderate to Able", "Mild_Moderate to Severe_Profound", "Mild_Moderate to Dead")
+    labels = c( "Enfermo a Sano", "Enfermo a Enfermo Grave", "Enfermo a Fallecimiento")
   ) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
@@ -90,14 +107,14 @@ severe_profound <- ggplot(datos_severe_profound, aes(x = Edad, y = Probabilidad,
   geom_point(size = 2) +
   theme_minimal() +
   labs(
-    title = "Probabilidades de Transición - Estado Inicial: Severe_Profound",
+    title = "Estado Inicial: Enfermo Grave",
     x = "Edad",
     y = "Probabilidad",
     color = "Estado Destino"
   ) +
   scale_color_manual(
     values = c("blue", "purple", "brown"),
-    labels = c( "Severe_Profound to Able", "Severe_Profound to Mild_Moderate", "Severe_Profound to Dead")
+    labels = c( "Enfermo Grave a Sano", "Enfermo Grave a Enfermo", "Enfermo Grave a Fallecimiento")
   ) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
@@ -124,14 +141,14 @@ dead <- ggplot(datos_dead, aes(x = Edad, y = Probabilidad, color = Estado_Destin
   geom_point(size = 2) +
   theme_minimal() +
   labs(
-    title = "Probabilidades de Transición - Estado Inicial: Dead",
+    title = "Probabilidades de Transición - Estado Inicial: Fallecimiento",
     x = "Edad",
     y = "Probabilidad",
     color = "Estado Destino"
   ) +
   scale_color_manual(
     values = c("blue", "purple", "brown"),
-    labels = c( "Dead to Able", "Dead to Mild_Moderate", "Dead to Severe_Profound")
+    labels = c( "Fallecimiento a Sano", "Fallecimiento a Sano", "Fallecimiento a Enfermo Grave")
   ) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
