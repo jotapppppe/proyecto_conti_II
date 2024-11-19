@@ -18,6 +18,7 @@ output:
 
 ```{r include=FALSE}
 source("code/setup.R")
+source('code/graficos.R')
 ```
 
 ```{r include=FALSE}
@@ -42,6 +43,7 @@ portafolio_graficos <- Portafolio %>%
 
 ```
 
+
 ```{r echo=FALSE}
 gg <- ggplot(portafolio_graficos, aes(x = factor(Edad), y = n, fill = Sexo_Nombre)) +
       geom_bar(stat = "identity", position = "stack") +
@@ -53,6 +55,18 @@ gg <- ggplot(portafolio_graficos, aes(x = factor(Edad), y = n, fill = Sexo_Nombr
 p <- ggplotly(gg)
 p
 ```
+
+
+```{r}
+print(able)
+
+print(mild_moderate)
+
+print(severe_profound)
+
+print(dead)
+```
+
 
 
 En este documento, se harán los cálculos correspondientes para encontrar las primas.
@@ -156,7 +170,7 @@ cat("La prima nivelada Comercial es:", prima_nivelada_comercial, "\n")
 
 ```{r echo=FALSE}
 primas <-0
-primas <- sapply(20:64, function(k) prima_riesgo(k, 0.04, "M"))
+primas <- sapply(20:64, function(k) prima_riesgo(k, 0.123, "M"))
 
 prima_nivelada_riesgo_h <- mean(primas)
 prima_nivelada_riesgo_h
@@ -172,7 +186,7 @@ prima_nivelada_comercial_h
 #### Prima de Riesgo
 ```{r echo=FALSE}
 primas <-0
-primas <- sapply(20:64, function(k) prima_riesgo(k, 0.04, "F"))
+primas <- sapply(20:64, function(k) prima_riesgo(k, 0.123, "F"))
 
 prima_nivelada_riesgo_m <- mean(primas)
 prima_nivelada_riesgo_m
